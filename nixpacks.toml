@@ -3,7 +3,7 @@ nixPkgs = ["nodejs_22", "nodePackages.pnpm"]
 
 [phases.install]
 cmds = [
-  "pnpm install --filter @backstab/server..."
+  "pnpm install"
 ]
 
 [phases.build]
