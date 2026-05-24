@@ -1,0 +1,20 @@
+{
+  "name": "backstab-court",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An AI-judged courtroom party game on GenLayer",
+  "scripts": {
+    "dev:server": "pnpm --filter @backstab/server dev",
+    "dev:web": "pnpm --filter @backstab/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "genlayer-js": "^1.1.8",
+    "socket.io-client": "^4.7.5"
+  }
+}
