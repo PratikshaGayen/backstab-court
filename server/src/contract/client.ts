@@ -2,7 +2,7 @@
  * Server-side GenLayer client.
  */
 import { createClient, createAccount, generatePrivateKey } from "genlayer-js";
-import { studionet } from "genlayer-js/chains";
+import { testnet_bradbury } from "genlayer-js/chains";
 import { TransactionStatus } from "genlayer-js/types";
 
 let cached: ReturnType<typeof createClient> | null = null;
@@ -16,7 +16,7 @@ function getClient() {
   const account = createAccount(pk);
   console.log(`[contract] server address: ${account.address}`);
 
-  const client = createClient({ chain: studionet, endpoint: RPC, account });
+  const client = createClient({ chain: testnet_bradbury, endpoint: RPC, account });
 
   const c = client as unknown as { request: (args: { method: string }) => Promise<unknown> };
   const orig = c.request.bind(client);
