@@ -26,6 +26,8 @@ function getClient() {
   console.log(`[contract] server address: ${account.address}`);
 
   const client = createClient({ chain: bradbury, endpoint: RPC, account });
+  console.log(`[contract] chain id: ${bradbury.id}`);
+  console.log(`[contract] chain rpc: ${bradbury.rpcUrls.default.http[0]}`);
 
   const c = client as unknown as { request: (args: { method: string }) => Promise<unknown> };
   const orig = c.request.bind(client);
