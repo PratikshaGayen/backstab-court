@@ -2,10 +2,10 @@
  * Server-side GenLayer client.
  */
 import { createClient, createAccount, generatePrivateKey } from "genlayer-js";
-import { testnet_asimov } from "genlayer-js/chains";
+import { testnetAsimov } from "genlayer-js/chains";
 
 const bradbury = {
-  ...testnet_asimov,
+  ...testnetAsimov,
   name: "GenLayer Testnet Bradbury",
   rpcUrls: {
     default: { http: ["https://rpc-bradbury.genlayer.com"] },
