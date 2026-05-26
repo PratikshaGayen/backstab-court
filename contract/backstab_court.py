@@ -64,8 +64,6 @@ class BackstabCourt(gl.Contract):
     xp_total: TreeMap[Address, u256]
     wins: TreeMap[Address, u256]
     losses: TreeMap[Address, u256]
-    participants: DynArray[Address]                              # FIXED: #19
-    participants_seen: TreeMap[Address, bool]                    # FIXED: #19
 
     def __init__(self, game_server_address: str = "") -> None:   # FIXED: #1
         self.owner = gl.message.sender_address                   # FIXED: #1
@@ -85,7 +83,7 @@ class BackstabCourt(gl.Contract):
             "Cats are objectively better pets than dogs",
             "Sleep is overrated - 5 hours is enough for most people",
             "Decentralization is more important than efficiency",
-        ], sort_keys=True)   # FIXED: #20
+        ])
 
     # ---- Auth helpers ---------------------------------------------------
 
@@ -164,14 +162,6 @@ class BackstabCourt(gl.Contract):
         for addr_hex, raw_delta in xp_delta.items():                 # FIXED: #7
             delta = int(raw_delta) * sign                            # FIXED: #7
             addr = Address(addr_hex)                                 # FIXED: #7
-            # FIXED: #19 - register participant on first XP event
-            try:                                                     # FIXED: #19
-                already = bool(self.participants_seen.get(addr, False))  # FIXED: #19
-            except Exception:                                        # FIXED: #19
-                already = False                                      # FIXED: #19
-            if not already:                                          # FIXED: #19
-                self.participants.append(addr)                       # FIXED: #19
-                self.participants_seen[addr] = True                  # FIXED: #19
             prev_xp = int(self.xp_total.get(addr, u256(0)))          # FIXED: #7
             self.xp_total[addr] = u256(max(0, prev_xp + delta))      # FIXED: #7
             if delta > 0:                                            # FIXED: #7
@@ -616,22 +606,6 @@ Output must be parseable JSON, nothing else."""
             "wins": int(self.wins.get(addr, u256(0))),
             "losses": int(self.losses.get(addr, u256(0))),
         }
-
-    @gl.public.view
-    def get_global_leaderboard(self, limit: int = 50) -> str:    # FIXED: #19
-        # FIXED: #19 - returns all participants sorted by XP
-        results = []                                             # FIXED: #19
-        for i in range(len(self.participants)):                  # FIXED: #19
-            addr = self.participants[i]                          # FIXED: #19
-            results.append({                                     # FIXED: #19
-                "address": addr.as_hex,                          # FIXED: #19
-                "xp": int(self.xp_total.get(addr, u256(0))),     # FIXED: #19
-                "wins": int(self.wins.get(addr, u256(0))),       # FIXED: #19
-                "losses": int(self.losses.get(addr, u256(0))),   # FIXED: #19
-            })                                                   # FIXED: #19
-        results.sort(key=lambda x: x["xp"], reverse=True)        # FIXED: #19
-        cap = max(1, min(int(limit), len(results)))              # FIXED: #19
-        return json.dumps(results[:cap], sort_keys=True)         # FIXED: #19
 
     @gl.public.view
     def get_leaderboard(self, addresses_json: str) -> str:
