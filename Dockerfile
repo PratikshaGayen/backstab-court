@@ -17,6 +17,7 @@ RUN pnpm install
 # Copy source files
 COPY shared/ ./shared/
 COPY server/ ./server/
+COPY contract/content/ ./contract/content/
 
 # Build shared first, then server
 RUN pnpm --filter @backstab/shared build
