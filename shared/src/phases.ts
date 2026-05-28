@@ -21,7 +21,7 @@ export const PHASE_DURATION_SEC: Record<Phase, number> = {
   CHARGE: 8,
   ACCUSE: 25,
   DEFEND: 20,
-  JURY: 90, // contract call takes 30–90s; server manages this dynamically
+  JURY: 360, // studionet contract call takes 2–5 min; server manages this dynamically
   VERDICT: 8,
   MATCH_END: 0,
 };
