@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CHARGES_PATH = resolve(__dirname, "../../../contract/content/charges.json");
+const CHARGES_PATH = resolve(__dirname, "charges.json");
 
 /** How many charges to use per week (subset of the full pool). */
 const WEEKLY_POOL_SIZE = 15;
