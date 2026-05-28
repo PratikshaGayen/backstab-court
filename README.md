@@ -1,43 +1,56 @@
-# 🔪 Backstab Court
+# Backstab Court
 
-> A 10-minute AI-judged courtroom party game on GenLayer.
-> Accuse your friends of absurd crimes. An unhinged AI jury delivers live verdicts. Betray, defend, win XP.
+> A multiplayer AI-judged courtroom party game on GenLayer.
+> Accuse your friends of absurd hot takes. An unhinged AI jury of 5 personas delivers live verdicts on-chain. Betray, defend, win XP.
 
-Built for GenLayer's community mini-game mission. Showcases **Intelligent Contracts** + **Optimistic Democracy** consensus as the core game mechanic.
+Built for GenLayer's community mini-game mission. Showcases **Intelligent Contracts** and **Optimistic Democracy** consensus as the core game mechanic — the AI jury runs entirely on-chain via `gl.nondet.exec_prompt` and `gl.eq_principle.prompt_comparative`.
 
-See [BLUEPRINT.md](./BLUEPRINT.md) for the full design and roadmap.
+## Live Demo
+
+- **Frontend:** https://backstab-court-web.vercel.app/
+- **Contract:** `0xC5dd84432bDBd6ee83166Af78Ec6DfdC5d4f0641` on GenLayer Studionet
+
+## How it works
+
+1. Players join a room and pick a hot take to debate
+2. Prosecutors accuse, the defendant defends
+3. The GenLayer contract runs 5 AI personas (Stern Judge, Drunk Poet, Conspiracy Theorist, Corporate HR, Literal Toddler) as an on-chain jury
+4. Optimistic Democracy consensus finalizes the verdict — GUILTY, INNOCENT, or CHAOTIC
+5. XP is staked and transferred on-chain based on the outcome
+6. If the jury is split, players can appeal — triggering the Supreme Validator with doubled stakes
 
 ## Repo layout
 
 ```
-contract/   GenLayer Intelligent Contract (Python)
-server/     Node game server (TypeScript + Socket.IO)
-web/        Vite + React frontend
+contract/   GenLayer Intelligent Contract (Python) + deploy scripts
+server/     Node game server (TypeScript + Socket.IO) hosted on Railway
+web/        Vite + React frontend hosted on Vercel
 shared/     Types + constants shared by server and web
 ```
 
-## Quick start
+## Quick start (local dev)
 
 ```powershell
-# 1. Install Node deps across the workspace
+# 1. Install dependencies
 pnpm install
 
-# 2. Copy env
+# 2. Copy env and fill in values
 cp .env.example .env
-# Fill in CONTRACT_ADDRESS after deploying the contract
 
-# 3. Start GenLayer Studio (localnet) in a separate terminal
-# See genlayer-studio docs: https://github.com/genlayerlabs/genlayer-studio
+# 3. Deploy the contract to Studionet
+server/node_modules/.bin/tsx.CMD contract/deploy/deploy.ts
 
-# 4. Deploy the contract (Studio UI at http://localhost:8080, paste contract/backstab_court.py)
-
-# 5. Run the stack
-pnpm dev:server     # :4100
-pnpm dev:web        # :5173
+# 4. Run the stack
+pnpm dev:server     # game server on :4100
+pnpm dev:web        # frontend on :5173
 ```
 
-## Status
+## Tech stack
 
-**Phase 0 — Skeleton** (in progress)
-
-See roadmap in [BLUEPRINT.md §7](./BLUEPRINT.md#7-build-roadmap).
+| Layer | Tech |
+|---|---|
+| Intelligent Contract | Python (GenVM), `gl.nondet.exec_prompt`, `gl.eq_principle.prompt_comparative` |
+| Game Server | Node.js + TypeScript + Socket.IO, hosted on Railway |
+| Frontend | Vite + React 18 + TypeScript, hosted on Vercel |
+| Blockchain SDK | `genlayer-js` v1.1.8 |
+| Network | GenLayer Studionet |
