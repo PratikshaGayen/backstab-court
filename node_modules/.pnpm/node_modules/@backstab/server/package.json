@@ -6,7 +6,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && node -e \"require('fs').copyFileSync('src/content/charges.json','dist/content/charges.json')\"",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit"
   },

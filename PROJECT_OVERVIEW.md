@@ -13,17 +13,63 @@ d:\Genlayer-Game\
 ├── pnpm-lock.yaml
 ├── .env                      # Contract addr, RPC URL, ports, private key
 ├── .env.example              # Template for .env
+├── .dockerignore
+├── .gitattributes
+├── .gitignore
 ├── Dockerfile                # Multi-stage: node:22-alpine → server only
 ├── README.md
 ├── HOW-TO-PLAY.md
 ├── ARCHITECTURE.md           # Detailed architecture doc
 ├── BLUEPRINT.md              # Full design document and roadmap
 ├── CONTEXT.md                # Full context for AI assistants
+├── PROJECT_OVERVIEW.md       # This file
+├── .claude/                  # Claude CLI config
+├── .github/agents/           # GitHub agent config
 ├── contract/                 # GenLayer Intelligent Contract (Python)
+│   ├── backstab_court.py     # Main contract (~628 lines)
+│   ├── content/
+│   │   ├── charges.json      # 100 hot-take charges (source of truth)
+│   │   └── charge_generator.py
+│   ├── deploy/
+│   │   ├── deploy.ts         # Deployment script
+│   │   └── verify.ts         # Contract verification
+│   └── schemas/
+│       └── backstab_court_schema.py  # JSON-RPC schema
 ├── server/                   # Game server (Node.js + TypeScript)
+│   └── src/
+│       ├── index.ts
+│       ├── bots/BotPlayer.ts
+│       ├── content/
+│       │   ├── charges.ts    # Weekly charge rotation logic
+│       │   └── charges.json  # Embedded copy (deployed with server)
+│       ├── contract/client.ts
+│       ├── jury/stubJury.ts
+│       ├── rooms/
+│       │   ├── Room.ts
+│       │   ├── RoomManager.ts
+│       │   └── PhaseMachine.ts
+│       └── sockets/gateway.ts
 ├── web/                      # Frontend (Vite + React + TypeScript)
-├── shared/                   # Shared types/constants (TypeScript)
-└── .claude/                  # Claude CLI config
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── vercel.json           # SPA rewrite rules for Vercel deploy
+│   └── src/
+│       ├── App.tsx
+│       ├── main.tsx
+│       ├── styles.css
+│       ├── components/       # AccusationInput, ChargeCard, DefenseInput,
+│       │                     # JuryStream, Leaderboard, PhaseTimer,
+│       │                     # VerdictBanner, VerdictCard
+│       ├── hooks/            # useSocket, useRoomState, useGenLayer,
+│       │                     # useWalletRegistration
+│       ├── lib/              # socket.ts, identity.ts, storage.ts
+│       └── pages/            # Landing, Lobby, Courtroom, GlobalLeaderboard
+└── shared/                   # Shared types/constants (TypeScript)
+    └── src/
+        ├── types.ts
+        ├── events.ts
+        ├── phases.ts
+        └── titles.ts
 ```
 
 ---
@@ -157,7 +203,7 @@ d:\Genlayer-Game\
 | `/` | `Landing.tsx` | Name entry, how-to-play steps, leaderboard link |
 | `/lobby` | `Lobby.tsx` | Create/join rooms, spectate mode |
 | `/room/:roomId` | `Courtroom.tsx` | Main game UI: all 7 phases, auto-rejoin |
-| `/leaderboard` | `GlobalLeaderboard.tsx` | On-chain XP stats from contract |
+| `/leaderboard` | `GlobalLeaderboard.tsx` | On-chain XP/wins/losses from contract |
 
 **Components:** `ChargeCard`, `AccusationInput`, `DefenseInput`, `JuryStream` (animated persona bubbles), `VerdictBanner`, `VerdictCard` (shareable PNG), `Leaderboard` (sidebar), `PhaseTimer` (countdown)
 
@@ -292,7 +338,7 @@ LOBBY → CHARGE → ACCUSE → DEFEND → JURY → VERDICT
 - **Server:** Ephemeral in-memory state (rooms, players, phases) — lost on restart.
 - **Blockchain:** `TreeMap[Address, u256]` for XP/wins/losses. Matches stored as JSON strings.
 - **Browser localStorage:** Auto-generated Ethereum keypair (`bc_private_key`), display name (`bc_display_name`).
-- **File system:** `contract/content/charges.json` (100 hot takes), loaded by server for weekly rotation.
+- **File system:** `contract/content/charges.json` (100 hot takes, source of truth). A copy is embedded in `server/src/content/charges.json` so Railway deployments load charges without needing the contract directory mounted.
 
 ---
 

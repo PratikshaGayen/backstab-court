@@ -315,7 +315,7 @@ export class Room {
           this.io.to(this.id).emit(SEvent.VERDICT, this.roundState.verdict);
           this.advancePhase();
         }
-      }, 680_000);
+      }, 2_100_000);
       return;
     }
 
@@ -393,10 +393,12 @@ export class Room {
       try {
         verdict = await this.runContractJury(rs, isFinal);
       } catch (err) {
-        console.error(`[Room ${this.id}] Contract jury failed, falling back to stub:`, err);
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`[Room ${this.id}] Contract jury FAILED round=${rs.round} — falling back to stub. Error: ${msg}`);
         verdict = this.runLocalStubJury(rs, isFinal);
       }
     } else {
+      console.warn(`[Room ${this.id}] useContract=false (configured=${isContractConfigured()} matchId=${this.matchId}) — using stub`);
       verdict = this.runLocalStubJury(rs, isFinal);
     }
 

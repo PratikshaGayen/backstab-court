@@ -24,7 +24,7 @@ export default function JuryStream({ bubbles }: { bubbles: PersonaVerdict[] }) {
           <p>The jury clears its collective throat...</p>
           <p style={{ fontSize: 11, opacity: 0.7 }}>
             ⏳ AI validators are deliberating via Optimistic Democracy consensus.
-            This may take 30–60 seconds.
+            This may take 2–5 minutes on Studionet.
           </p>
         </div>
       )}

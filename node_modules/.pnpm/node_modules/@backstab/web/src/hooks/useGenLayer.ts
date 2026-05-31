@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createClient, createAccount, generatePrivateKey } from "genlayer-js";
-import { localnet } from "genlayer-js/chains";
+import { studionet } from "genlayer-js/chains";
 import { TransactionStatus } from "genlayer-js/types";
 import { storage } from "../lib/storage";   // FIXED: #17
 
@@ -36,7 +36,7 @@ export function useGenLayer() {
 
   useEffect(() => {
     const acc = getStoredAccount();
-    const c = createClient({ chain: localnet, endpoint: ENDPOINT, account: acc });
+    const c = createClient({ chain: studionet, endpoint: ENDPOINT, account: acc });
 
     // eth_gasPrice patch — see Predikt reference §11.
     const patched = c as unknown as {
